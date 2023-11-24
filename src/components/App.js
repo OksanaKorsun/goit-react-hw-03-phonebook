@@ -6,12 +6,28 @@ import { Filter } from './Filter/Filter';
 import { ContactList } from './ContactList/ContactList';
 import { GlobalStyle } from './GlobalStyle';
 import { Container } from './App.styled';
+const localStorageKey = 'updateContacts';
 export class App extends Component {
   state = {
     contacts: initialContacts,
     filter: '',
   };
-
+  componentDidMount() {
+    const savedContacts = window.localStorage.getItem(localStorageKey);
+    if (savedContacts !== null) {
+      this.setState({
+        contacts: JSON.parse(savedContacts),
+      });
+    }
+  }
+  componentDidUpdate(prevState) {
+    if (prevState.contacts !== this.state.contacts) {
+      window.localStorage.setItem(
+        localStorageKey,
+        JSON.stringify(this.state.contacts)
+      );
+    }
+  }
   handleFilter = evt => {
     this.setState({
       filter: evt.target.value,
@@ -25,7 +41,10 @@ export class App extends Component {
     });
   };
   addContact = newContact => {
-    const contact = { ...newContact, id: nanoid() };
+    const contact = {
+      id: nanoid(),
+      ...newContact,
+    };
     const checkContact = this.state.contacts.find(
       contact => contact.name.toLowerCase() === newContact.name.toLowerCase()
     );
@@ -39,7 +58,7 @@ export class App extends Component {
     });
   };
 
-   filteredList = () => {
+  filteredList = () => {
     const { contacts, filter } = this.state;
     return contacts.filter(contact => {
       return contact.name.toLowerCase().includes(filter.toLowerCase());
