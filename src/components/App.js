@@ -5,7 +5,7 @@ import { ContactForm } from './ContactForm/ContactForm';
 import { Filter } from './Filter/Filter';
 import { ContactList } from './ContactList/ContactList';
 import { GlobalStyle } from './GlobalStyle';
-import { Container } from './App.styled';
+import { Container, Title } from './App.styled';
 const localStorageKey = 'updateContacts';
 export class App extends Component {
   state = {
@@ -20,6 +20,7 @@ export class App extends Component {
       });
     }
   }
+
   componentDidUpdate(prevProps, prevState) {
     if (prevState.contacts !== this.state.contacts) {
       window.localStorage.setItem(
@@ -28,6 +29,7 @@ export class App extends Component {
       );
     }
   }
+
   handleFilter = evt => {
     this.setState({
       filter: evt.target.value,
@@ -69,7 +71,7 @@ export class App extends Component {
     const { filter } = this.state;
     return (
       <Container>
-        <h1>Phonebook</h1>
+        <Title>Phonebook</Title>
         <ContactForm updateContact={this.addContact} />
         <h2>Contacts</h2>
         <Filter filter={filter} onUpdateFilter={this.handleFilter} />
